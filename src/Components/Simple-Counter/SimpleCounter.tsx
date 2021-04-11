@@ -15,7 +15,7 @@ const SimpleCounter = () => {
     const incSimpleCount = () => {
         dispatch({type:"INCREMENT"})
     }
-    const resetSimpleCount = () => {
+    const resetSimpleCount = () =>  {
         dispatch({type:"RESET"})
     }
 

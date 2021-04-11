@@ -19,6 +19,7 @@ const CounterSettings: React.FC<CounterSettingsType> = (
         maxCountValue, startCountValue,
         maxCountChanger, startCountChanger
     }) => {
+
     return (
         <div className={ s.wrapper }>
             <div className={ s.settings }>
@@ -27,6 +28,7 @@ const CounterSettings: React.FC<CounterSettingsType> = (
                     <SuperNumberInput
                         maxCountValue={ maxCountValue }
                         maxCountChanger={ maxCountChanger }
+                        data-count="max"
                     />
                 </div>
                 <div>
@@ -34,6 +36,7 @@ const CounterSettings: React.FC<CounterSettingsType> = (
                     <SuperNumberInput
                         startCountValue={ startCountValue }
                         startCountChanger={ startCountChanger }
+                        data-count="start"
                     />
                 </div>
             </div>
