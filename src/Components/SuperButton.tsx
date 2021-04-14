@@ -4,35 +4,23 @@ import bs from "../Components/Components-Styles/SuperButton.module.css";
 type DefaultButtonPropsType = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
 
 type SuperButtonPropsType = DefaultButtonPropsType & {
-    buttonIncDisable?: boolean
-    buttonSetDisable?: boolean
-    buttonResetDisable?: boolean
-    simpleResetDisable?: boolean
-    simpleIncDisable?: boolean
-    addCountValuesToLS?: () => void
-    newCount?: () => void
-    resetCounter?: () => void
-    incSimpleCount?: () => void
-    resetSimpleCount?: () => void
+    onClickHandler: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    disable: boolean
 }
 
-const SuperButton: React.FC<SuperButtonPropsType> = (
-    {
-        buttonIncDisable, buttonSetDisable,
-        buttonResetDisable, resetCounter,
-        newCount,
-        addCountValuesToLS,
-        incSimpleCount, resetSimpleCount,
-        simpleResetDisable, simpleIncDisable,
-        ...restProps
-    }) => {
+const SuperButton: React.FC<SuperButtonPropsType> = props => {
 
-
+    const {
+        onClickHandler,
+        disable
+    } = props
 
     return (
         <button
-            className={bs.button}
-            { ...restProps }
+            className={ bs.button }
+            onClick={onClickHandler}
+            disabled={disable}
+            {...props}
         />
     );
 }

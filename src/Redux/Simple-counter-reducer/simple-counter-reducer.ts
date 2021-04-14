@@ -18,7 +18,6 @@ const initialState: SimpleCounterType = {
 }
 
 export function simpleCounterReducer(state: SimpleCounterType = initialState, action: ActionType): SimpleCounterType {
-    debugger
     switch (action.type) {
         case("INCREMENT"):
             state.simpleCount < 5 ? (state.simpleCount += 1) : state.simpleCount

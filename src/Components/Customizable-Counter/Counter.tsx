@@ -1,42 +1,71 @@
-import React from 'react';
+import React, {MouseEvent} from 'react';
 import s from '../../App.module.css';
 import SuperButton from "../SuperButton";
+import {useDispatch, useSelector} from "react-redux";
+import {AppStateType} from "../../Redux/store";
+import {
+    incrementCountAC, resetCounterAC
+} from "../../Redux/Customizable-Counter-reducer/customizable-counter-reducer";
 
+const Counter: React.FC = () => {
 
-export type CounterType = {
-    count: string | number
-    maxCount: number
-    errorMessage: string
-    buttonIncDisable: boolean
-    buttonResetDisable: boolean
-    newCount: () => void
-    resetCounter: () => void
-}
-
-
-const Counter: React.FC<CounterType> = (
-    {
-        buttonIncDisable,  buttonResetDisable,
-        count, maxCount,
+    let {
+        count,
+        maxCount,
+        startCount,
         errorMessage,
-        newCount, resetCounter
-    }) => {
+        buttonIncDisable,
+        buttonResetDisable
+    } = useSelector((state: AppStateType) => state.customizableCounter)
 
-    let finalCounterStyles = count === errorMessage ||  count === maxCount ?
+    const dispatch = useDispatch()
+
+    // События кликов инкремента и сброса счётчика
+    const buttonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
+        if (e.currentTarget.dataset.button) {
+            let trigger: string = e.currentTarget.dataset.button
+            if (trigger === "inc") {
+                dispatch(incrementCountAC())
+            }
+            if (trigger === "res") {
+                dispatch(resetCounterAC())
+            }
+        }
+    }
+
+    let content
+    (maxCount <= 0 || startCount < 0) ? content = errorMessage : content = count
+
+    //Проверка для дизейбла кнопки "inc"
+    if(count === maxCount){
+        buttonIncDisable = true
+    }
+
+    // Стилизация отображаемой области счётчика
+    let finalContentStyles = maxCount <= 0 || startCount < 0 || count === maxCount ?
         `${ s.red } ${ s.counter }`:
         `${ s.normal } ${ s.counter }`
+
 
     return (
         <div>
             <div className={ s.wrapper }>
-                <div className={finalCounterStyles}>
-                    { count }
+                <div className={ finalContentStyles }>
+                    { content }
                 </div>
                 <div className={ s.buttons }>
-                    <SuperButton onClick={ newCount } disabled={buttonIncDisable}>
+                    <SuperButton
+                        onClickHandler={ buttonOnClick }
+                        disable={ buttonIncDisable }
+                        data-button="inc"
+                    >
                         inc
                     </SuperButton>
-                    <SuperButton onClick={ resetCounter }  disabled={ buttonResetDisable}>
+                    <SuperButton
+                        onClickHandler={ buttonOnClick }
+                        disable={ buttonResetDisable }
+                        data-button="res"
+                    >
                         reset
                     </SuperButton>
                 </div>

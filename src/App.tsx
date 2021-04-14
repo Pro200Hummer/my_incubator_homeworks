@@ -17,7 +17,7 @@ export type CounterStateType = {
 
 function App() {
     // Local state
-    let [state, setState] = useState<CounterStateType>({
+ /*   let [state, setState] = useState<CounterStateType>({
         startCount: 0,
         count: 0,
         maxCount: 0,
@@ -96,17 +96,17 @@ function App() {
 
     let incDisable
     incDisable = state.maxCount <= 0 || state.startCount < 0 || state.count === state.maxCount;
-    /*if(state.maxCount < 0 || state.startCount < 0 || state.count === state.maxCount){
+    /!*if(state.maxCount < 0 || state.startCount < 0 || state.count === state.maxCount){
         incDisable = true
     }else{
         incDisable = false
-    }*/
+    }*!/
 
     let resetDisable
     (state.maxCount <= 0 || state.startCount < 0) ? resetDisable = true : resetDisable = false
 
     let count
-    (state.maxCount <= 0 || state.startCount < 0) ? count = state.errorMessage : count = state.count
+    (state.maxCount <= 0 || state.startCount < 0) ? count = state.errorMessage : count = state.count*/
 
     return (
         <div className={ ms.body }>
@@ -115,21 +115,7 @@ function App() {
                 <NavBar/>
             </div>
             <div className={ ms.content }>
-                <Routes
-                    maxCountValue={ state.maxCount }
-                    startCountValue={ state.startCount }
-                    buttonSetDisable={ setDisable }
-                    addCountValuesToLS={ addCountValuesToLS }
-                    maxCountChanger={ maxCountChanger }
-                    startCountChanger={ startCountChanger }
-                    count={ count }
-                    maxCount={ state.maxCount }
-                    errorMessage={ state.errorMessage }
-                    buttonIncDisable={ incDisable }
-                    buttonResetDisable={ resetDisable }
-                    newCount={ newCount }
-                    resetCounter={ resetCounter }
-                />
+                <Routes/>
             </div>
         </div>
     )
