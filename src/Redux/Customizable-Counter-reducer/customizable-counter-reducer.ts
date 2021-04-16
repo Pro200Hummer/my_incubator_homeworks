@@ -7,17 +7,16 @@ export enum ACTIONS_TYPE {
     RESET_COUNT_CHANGER = "RESET_COUNT_CHANGER",
     BUTTON_SET_CLICK = "BUTTON_SET_CLICK",
     SET_COUNTER_VALUES = "SET_COUNTER_VALUES",
+    CHANGE_CONTENT_MESSAGE = "CHANGE_CONTENT_MESSAGE"
 }
 
 export type CustomizableCounterStateType = {
+    content: number | string
     startCount: number
-    count: number | string
     maxCount: number
     buttonSetDisable: boolean
     buttonIncDisable: boolean
     buttonResetDisable: boolean
-    errorMessage: string
-    infoMessage: string
 }
 
 export type ActionType = IncrementCountActionType
@@ -26,16 +25,15 @@ export type ActionType = IncrementCountActionType
     | ResetCounterActionType
     | ButtonSetClick
     | SetCounterValues
+    | ChangeContentMessageType
 
 const initialState: CustomizableCounterStateType = {
+    content: "Enter a correct values and press set",
     startCount: 0,
-    count: 0,
     maxCount: 0,
     buttonIncDisable: false,
     buttonResetDisable: false,
     buttonSetDisable: true,
-    errorMessage: "Incorrect value",
-    infoMessage: "Enter values and press set"
 }
 
 export const customizableCounterReducer = (state = initialState, action: ActionType): CustomizableCounterStateType => {
@@ -43,14 +41,13 @@ export const customizableCounterReducer = (state = initialState, action: ActionT
         case ACTIONS_TYPE.SET_COUNTER_VALUES:
             state.maxCount = action.maxCountStartValue
             state.startCount = action.startCountStartValue
-            state.count = action.startCountStartValue
+            state.content = action.startCountStartValue
             return {...state}
         case ACTIONS_TYPE.MAX_COUNT_CHANGER:
         case ACTIONS_TYPE.START_COUNT_CHANGER:
-            state.buttonSetDisable = false
             state.buttonIncDisable = true
             state.buttonResetDisable = true
-            state.count = state.infoMessage
+            state.buttonSetDisable = false
             if (action.payload.trigger === "maxCountTrigger") {
                 state.maxCount = action.countValue
                 return {...state}
@@ -60,19 +57,40 @@ export const customizableCounterReducer = (state = initialState, action: ActionT
                 return {...state}
             }
             return {...state}
+        case ACTIONS_TYPE.CHANGE_CONTENT_MESSAGE:
+            if(state.maxCount > 0 || state.startCount > 0 || state.startCount === state.maxCount){
+                if(state.maxCount < state.startCount){
+                    state.content = "The max count value must be greater than the start count value"
+                }else{
+                    state.content = "Enter correct values and press set"
+                }
+            }
+            if(state.maxCount < 0 || state.startCount < 0){
+                state.content = "Incorrect value"
+            }
+            return {...state}
         case ACTIONS_TYPE.INCREMENT_COUNT_TYPE:
-            if (typeof state.count === "number") {
-                state.count !== state.maxCount ? state.count++ : state.count
+            if (typeof state.content === "number") {
+                state.content !== state.maxCount ? state.content++ : state.content
             }
             return {...state}
         case ACTIONS_TYPE.RESET_COUNT_CHANGER:
-            state.count = state.startCount
+            if (typeof state.content === "string") {
+                state.content
+            }else{
+                state.content = state.startCount
+            }
             return {...state}
         case ACTIONS_TYPE.BUTTON_SET_CLICK:
-            state.count = state.startCount
+            state.content = state.startCount
             state.buttonIncDisable = false
             state.buttonResetDisable = false
             state.buttonSetDisable = true
+            if(state.maxCount === state.startCount){
+                state.content = "The max count cannot be equal start count. Please enter a correct values"
+                state.buttonIncDisable = true
+                state.buttonResetDisable = true
+            }
             return {...state}
         default:
             return state
@@ -151,11 +169,28 @@ export const setCounterValuesAC = (maxCountStartValue: number, startCountStartVa
     }
 }
 
+// Action type and Action for change content message
+export type ChangeContentMessageType = {
+    type:ACTIONS_TYPE.CHANGE_CONTENT_MESSAGE
+}
+export const changeContentMessageAC = ():ChangeContentMessageType => {
+    return {
+        type: ACTIONS_TYPE.CHANGE_CONTENT_MESSAGE
+    }
+}
+
 // Thunk for get state from localStorage
-export const getSettingValuesTC = () => (dispatch:Dispatch) => {
+export const getSettingValuesTC = () => (dispatch: Dispatch) => {
     let getMaxCountValue = localStorage.getItem("maxCount")
     let getStartCountValue = localStorage.getItem("startCount")
     if (getMaxCountValue && getStartCountValue) {
         dispatch(setCounterValuesAC(JSON.parse(getMaxCountValue), JSON.parse(getStartCountValue)))
     }
 }
+/*export const setSettingValuesTC = () => (dispatch: Dispatch) => {
+    let getMaxCountValue = localStorage.getItem("maxCount")
+    let getStartCountValue = localStorage.getItem("startCount")
+    if (getMaxCountValue && getStartCountValue) {
+        dispatch(setCounterValuesAC(JSON.parse(getMaxCountValue), JSON.parse(getStartCountValue)))
+    }
+}*/

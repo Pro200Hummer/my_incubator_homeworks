@@ -8,14 +8,12 @@ import {
 let initState: CustomizableCounterStateType;
 beforeEach(() => {
     initState = {
+        content: "Enter a correct values and press set",
         startCount: 0,
-        count: 0,
         maxCount: 0,
         buttonIncDisable: false,
         buttonResetDisable: false,
         buttonSetDisable: true,
-        errorMessage: "Incorrect value",
-        infoMessage: "Enter values and press set"
     }
 })
 
@@ -35,29 +33,29 @@ test("the start count value should change", () => {
     expect(endCount).toBe(10)
 })
 test("the starting count should be increased by one", () => {
-    initState.count = 0
+    initState.content = 0
     initState.maxCount = 2
     const action = incrementCountAC();
     const finalState = customizableCounterReducer(initState, action)
-    const endCount = finalState.count
+    const endCount = finalState.content
 
     expect(endCount).toBe(1)
 })
 test("the starting count should not be increased by one", () => {
-    initState.count = 2
+    initState.content = 2
     initState.maxCount = 2
     const action = incrementCountAC();
     const finalState = customizableCounterReducer(initState, action)
-    const endCount = finalState.count
+    const endCount = finalState.content
 
     expect(endCount).toBe(2)
 })
 test("the count must be equal to the starting one", () => {
     initState.startCount = 3;
-    initState.count = 10;
+    initState.content = 10;
     const action = resetCounterAC();
     const finalState = customizableCounterReducer(initState, action)
-    const endCount = finalState.count
+    const endCount = finalState.content
 
     expect(endCount === initState.startCount).toBe(true)
 })

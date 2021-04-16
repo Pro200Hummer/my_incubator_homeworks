@@ -13,7 +13,12 @@ import {
 
 const SimpleCounter = () => {
 
-    const state = useSelector((state:AppStateType) => state.simpleCounter)
+    const {
+        simpleCount,
+        simpleIncDisable,
+        simpleResetDisable
+    } = useSelector((state:AppStateType) => state.simpleCounter)
+
     const dispatch = useDispatch()
 
     const buttonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -28,19 +33,19 @@ const SimpleCounter = () => {
         }
     }
 
-    let finalSimpleCounterStyles = state.simpleCount === 5 ? `${ s.red } ${ s.counter }` : `${ s.counter } ${ s.normal }`
+    let finalSimpleCounterStyles = simpleCount === 5 ? `${ s.red } ${ s.counter }` : `${ s.counter } ${ s.normal }`
 
     return (
         <div>
             <div className={ s.wrapper }>
                 <div className={ finalSimpleCounterStyles }>
-                    { state.simpleCount }
+                    { simpleCount }
                 </div>
                 <div className={ bs.buttons }>
-                    <SuperButton onClickHandler={ buttonOnClick } disable={state.simpleIncDisable} data-button="simpInc">
+                    <SuperButton onClickHandler={ buttonOnClick } disable={simpleIncDisable} data-button="simpInc">
                         Inc
                     </SuperButton>
-                    <SuperButton onClickHandler={ buttonOnClick } disable={ state.simpleResetDisable } data-button="simpRes">
+                    <SuperButton onClickHandler={ buttonOnClick } disable={ simpleResetDisable } data-button="simpRes">
                         Reset
                     </SuperButton>
                 </div>

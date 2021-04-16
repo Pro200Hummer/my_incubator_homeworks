@@ -6,11 +6,11 @@ import SuperButton from "../SuperButton";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../Redux/store";
 import {
-    buttonSetAC, getSettingValuesTC,
+    buttonSetAC, changeContentMessageAC, getSettingValuesTC,
     maxCountChangerAC, startCountChangerAC
 } from "../../Redux/Customizable-Counter-reducer/customizable-counter-reducer";
 
-const CounterSettings: React.FC = () => {
+const CounterSettings: React.FC = React.memo(() => {
 
     let {
         startCount,
@@ -24,27 +24,29 @@ const CounterSettings: React.FC = () => {
         dispatch(getSettingValuesTC())
     }, [])
 
-    // Функция изменения стартового и максимального значения
+    // Callback for input onChange
     const inputValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = Number(e.currentTarget.value)
         if (e.currentTarget.dataset.count) {
             let trigger: string = e.currentTarget.dataset.count
             if (trigger === "max") {
                 dispatch(maxCountChangerAC(value))
-                return
+                dispatch(changeContentMessageAC())
             }
             if (trigger === "start") {
                 dispatch(startCountChangerAC(value))
+                dispatch(changeContentMessageAC())
             }
         }
     }
-    // Обработка сет клика
+
+    // Callback for "set" button onClick
     const buttonOnClick = () => {
         dispatch(buttonSetAC())
     }
 
-    //Проверка для дизейбла кнопки "set"
-    if(maxCount < 0 || startCount < 0){
+    // Disable for "set" button
+    if(maxCount < 0 || startCount < 0 || maxCount < startCount){
         buttonSetDisable = true
     }
 
@@ -78,7 +80,7 @@ const CounterSettings: React.FC = () => {
             </div>
         </div>
     )
-}
+})
 
 export default CounterSettings
 

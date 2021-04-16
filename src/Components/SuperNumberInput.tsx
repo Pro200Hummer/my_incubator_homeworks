@@ -10,16 +10,12 @@ type SuperInputTextPropsType = DefaultInputPropsType & { // и + ещё проп
 };
 
 const SuperNumberInput: React.FC<SuperInputTextPropsType> = props => {
-
     const {
         inputValueHandler,
         inputValue
     } = props
 
-
-    const error = inputValue < 0
-
-    const superInputStyle = error ? `${ s.errorInput }` : `${ s.superInput }`
+    const superInputStyle = inputValue < 0 ? `${ s.errorInput }` : `${ s.superInput }`
 
     return (
         <>

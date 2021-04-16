@@ -1,4 +1,4 @@
-import React, {MouseEvent} from 'react';
+import React, {MouseEvent, useCallback} from 'react';
 import s from '../../App.module.css';
 import SuperButton from "../SuperButton";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,21 +7,20 @@ import {
     incrementCountAC, resetCounterAC
 } from "../../Redux/Customizable-Counter-reducer/customizable-counter-reducer";
 
-const Counter: React.FC = () => {
+const Counter: React.FC = React.memo(() => {
 
     let {
-        count,
+        content,
         maxCount,
         startCount,
-        errorMessage,
         buttonIncDisable,
-        buttonResetDisable
+        buttonResetDisable,
     } = useSelector((state: AppStateType) => state.customizableCounter)
 
     const dispatch = useDispatch()
 
     // События кликов инкремента и сброса счётчика
-    const buttonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
+    const buttonOnClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
         if (e.currentTarget.dataset.button) {
             let trigger: string = e.currentTarget.dataset.button
             if (trigger === "inc") {
@@ -31,19 +30,19 @@ const Counter: React.FC = () => {
                 dispatch(resetCounterAC())
             }
         }
-    }
+    }, [startCount, maxCount])
 
-    let content
-    (maxCount <= 0 || startCount < 0) ? content = errorMessage : content = count
+    /*let content
+    (maxCount <= 0 || startCount < 0) ? content = errorMessage : content = count*/
 
     //Проверка для дизейбла кнопки "inc"
-    if(count === maxCount){
+    if (content === maxCount) {
         buttonIncDisable = true
     }
 
     // Стилизация отображаемой области счётчика
-    let finalContentStyles = maxCount <= 0 || startCount < 0 || count === maxCount ?
-        `${ s.red } ${ s.counter }`:
+    let finalContentStyles = maxCount < 0 || startCount < 0 || content === maxCount || maxCount < startCount ?
+        `${ s.red } ${ s.counter }` :
         `${ s.normal } ${ s.counter }`
 
 
@@ -72,6 +71,6 @@ const Counter: React.FC = () => {
             </div>
         </div>
     )
-}
+})
 
 export default Counter;
