@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import s from '../../App.module.css';
 import bs from '../../App.module.css'
 import SuperNumberInput from "../SuperNumberInput";
@@ -7,11 +7,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../Redux/store";
 import {
     buttonSetAC, changeContentMessageAC, getSettingValuesTC,
-    maxCountChangerAC, startCountChangerAC
+    maxCountChangerAC, setSettingValuesTC, startCountChangerAC
 } from "../../Redux/Customizable-Counter-reducer/customizable-counter-reducer";
 
 const CounterSettings: React.FC = React.memo(() => {
-
+    console.log('Counter Settings')
     let {
         startCount,
         maxCount,
@@ -25,7 +25,7 @@ const CounterSettings: React.FC = React.memo(() => {
     }, [])
 
     // Callback for input onChange
-    const inputValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValueHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         let value = Number(e.currentTarget.value)
         if (e.currentTarget.dataset.count) {
             let trigger: string = e.currentTarget.dataset.count
@@ -38,15 +38,16 @@ const CounterSettings: React.FC = React.memo(() => {
                 dispatch(changeContentMessageAC())
             }
         }
-    }
+    }, [maxCount, startCount])
 
     // Callback for "set" button onClick
-    const buttonOnClick = () => {
+    const buttonOnClick = useCallback(() => {
         dispatch(buttonSetAC())
-    }
+        dispatch(setSettingValuesTC())
+    }, [maxCount, startCount])
 
     // Disable for "set" button
-    if(maxCount < 0 || startCount < 0 || maxCount < startCount){
+    if (maxCount < 0 || startCount < 0 || maxCount < startCount) {
         buttonSetDisable = true
     }
 

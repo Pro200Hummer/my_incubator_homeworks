@@ -1,4 +1,5 @@
 import {Dispatch} from "redux";
+import {AppStateType} from "../store";
 
 export enum ACTIONS_TYPE {
     INCREMENT_COUNT_TYPE = "INCREMENT_COUNT_TYPE",
@@ -58,35 +59,37 @@ export const customizableCounterReducer = (state = initialState, action: ActionT
             }
             return {...state}
         case ACTIONS_TYPE.CHANGE_CONTENT_MESSAGE:
-            if(state.maxCount > 0 || state.startCount > 0 || state.startCount === state.maxCount){
-                if(state.maxCount < state.startCount){
+            if (state.maxCount > 0 || state.startCount > 0 || state.startCount === state.maxCount) {
+                if (state.maxCount < state.startCount) {
                     state.content = "The max count value must be greater than the start count value"
-                }else{
+                } else {
                     state.content = "Enter correct values and press set"
                 }
             }
-            if(state.maxCount < 0 || state.startCount < 0){
+            if (state.maxCount < 0 || state.startCount < 0) {
                 state.content = "Incorrect value"
             }
             return {...state}
         case ACTIONS_TYPE.INCREMENT_COUNT_TYPE:
             if (typeof state.content === "number") {
-                state.content !== state.maxCount ? state.content++ : state.content
+                state.content !== state.maxCount ? state.content++ : state.content;
+                (state.content === state.maxCount) ? state.buttonIncDisable = true : state.buttonIncDisable = false;
             }
             return {...state}
         case ACTIONS_TYPE.RESET_COUNT_CHANGER:
             if (typeof state.content === "string") {
                 state.content
-            }else{
+            } else {
                 state.content = state.startCount
             }
+            state.buttonIncDisable = false
             return {...state}
         case ACTIONS_TYPE.BUTTON_SET_CLICK:
             state.content = state.startCount
             state.buttonIncDisable = false
             state.buttonResetDisable = false
             state.buttonSetDisable = true
-            if(state.maxCount === state.startCount){
+            if (state.maxCount === state.startCount) {
                 state.content = "The max count cannot be equal start count. Please enter a correct values"
                 state.buttonIncDisable = true
                 state.buttonResetDisable = true
@@ -171,15 +174,15 @@ export const setCounterValuesAC = (maxCountStartValue: number, startCountStartVa
 
 // Action type and Action for change content message
 export type ChangeContentMessageType = {
-    type:ACTIONS_TYPE.CHANGE_CONTENT_MESSAGE
+    type: ACTIONS_TYPE.CHANGE_CONTENT_MESSAGE
 }
-export const changeContentMessageAC = ():ChangeContentMessageType => {
+export const changeContentMessageAC = (): ChangeContentMessageType => {
     return {
         type: ACTIONS_TYPE.CHANGE_CONTENT_MESSAGE
     }
 }
 
-// Thunk for get state from localStorage
+// Thunk for set and get state from localStorage
 export const getSettingValuesTC = () => (dispatch: Dispatch) => {
     let getMaxCountValue = localStorage.getItem("maxCount")
     let getStartCountValue = localStorage.getItem("startCount")
@@ -187,10 +190,12 @@ export const getSettingValuesTC = () => (dispatch: Dispatch) => {
         dispatch(setCounterValuesAC(JSON.parse(getMaxCountValue), JSON.parse(getStartCountValue)))
     }
 }
-/*export const setSettingValuesTC = () => (dispatch: Dispatch) => {
-    let getMaxCountValue = localStorage.getItem("maxCount")
-    let getStartCountValue = localStorage.getItem("startCount")
-    if (getMaxCountValue && getStartCountValue) {
-        dispatch(setCounterValuesAC(JSON.parse(getMaxCountValue), JSON.parse(getStartCountValue)))
+export const setSettingValuesTC = () => (dispatch: Dispatch, getState: () => AppStateType) => {
+    let setMaxCount = getState().customizableCounter.maxCount
+    let setStartCount = getState().customizableCounter.startCount
+    if (setMaxCount > 0 && setStartCount >= 0 && setMaxCount > setStartCount) {
+        localStorage.setItem("maxCount", JSON.stringify(setMaxCount))
+        localStorage.setItem("startCount", JSON.stringify(setStartCount))
+
     }
-}*/
+}

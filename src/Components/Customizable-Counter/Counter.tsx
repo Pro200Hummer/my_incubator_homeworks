@@ -8,7 +8,7 @@ import {
 } from "../../Redux/Customizable-Counter-reducer/customizable-counter-reducer";
 
 const Counter: React.FC = React.memo(() => {
-
+    console.log('Counter')
     let {
         content,
         maxCount,
@@ -30,15 +30,7 @@ const Counter: React.FC = React.memo(() => {
                 dispatch(resetCounterAC())
             }
         }
-    }, [startCount, maxCount])
-
-    /*let content
-    (maxCount <= 0 || startCount < 0) ? content = errorMessage : content = count*/
-
-    //Проверка для дизейбла кнопки "inc"
-    if (content === maxCount) {
-        buttonIncDisable = true
-    }
+    }, [content])
 
     // Стилизация отображаемой области счётчика
     let finalContentStyles = maxCount < 0 || startCount < 0 || content === maxCount || maxCount < startCount ?

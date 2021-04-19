@@ -8,7 +8,7 @@ type SuperButtonPropsType = DefaultButtonPropsType & {
     disable: boolean
 }
 
-const SuperButton: React.FC<SuperButtonPropsType> = props => {
+const SuperButton: React.FC<SuperButtonPropsType> = React.memo(props => {
 
     const {
         onClickHandler,
@@ -23,6 +23,6 @@ const SuperButton: React.FC<SuperButtonPropsType> = props => {
             {...props}
         />
     );
-}
+})
 
 export default SuperButton;

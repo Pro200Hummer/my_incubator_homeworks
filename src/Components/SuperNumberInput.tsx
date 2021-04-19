@@ -9,7 +9,7 @@ type SuperInputTextPropsType = DefaultInputPropsType & { // и + ещё проп
     inputValue: number
 };
 
-const SuperNumberInput: React.FC<SuperInputTextPropsType> = props => {
+const SuperNumberInput: React.FC<SuperInputTextPropsType> = React.memo(props => {
     const {
         inputValueHandler,
         inputValue
@@ -28,6 +28,6 @@ const SuperNumberInput: React.FC<SuperInputTextPropsType> = props => {
             />
         </>
     );
-}
+})
 
 export default SuperNumberInput;

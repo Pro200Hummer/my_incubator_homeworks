@@ -13,10 +13,12 @@ let reducers = combineReducers({
 
 export const store = createStore(reducers, applyMiddleware(thunk))
 
+/*
 store.subscribe(() => {
     localStorage.setItem("startCount", JSON.stringify(store.getState().customizableCounter.startCount))
     localStorage.setItem("maxCount", JSON.stringify(store.getState().customizableCounter.maxCount))
 })
+*/
 
 export type CounterStateType = ReturnType<typeof reducers>
 export interface AppStateType extends CounterStateType{}
