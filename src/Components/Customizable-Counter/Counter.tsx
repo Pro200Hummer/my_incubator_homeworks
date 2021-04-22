@@ -33,9 +33,9 @@ const Counter: React.FC = React.memo(() => {
     }, [content])
 
     // Стилизация отображаемой области счётчика
-    let finalContentStyles = maxCount < 0 || startCount < 0 || content === maxCount || maxCount < startCount ?
-        `${ s.red } ${ s.counter }` :
-        `${ s.normal } ${ s.counter }`
+     let finalContentStyles = maxCount < 0 || startCount < 0 || content === maxCount || maxCount < startCount ?
+         `${ s.red } ${ s.counter }` :
+         `${ s.normal } ${ s.counter }`
 
 
     return (

@@ -6,17 +6,21 @@ import SuperButton from "../SuperButton";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../Redux/store";
 import {
-    buttonSetAC, changeContentMessageAC, getSettingValuesTC,
-    maxCountChangerAC, setSettingValuesTC, startCountChangerAC
+    buttonSetAC, changeContentMessageAC,
+    maxCountChangerAC,  startCountChangerAC, getSettingValuesTC,setSettingValuesTC
 } from "../../Redux/Customizable-Counter-reducer/customizable-counter-reducer";
 
 const CounterSettings: React.FC = React.memo(() => {
     console.log('Counter Settings')
-    let {
+    /*let {
         startCount,
         maxCount,
         buttonSetDisable,
-    } = useSelector((state: AppStateType) => state.customizableCounter)
+    } = useSelector((state: AppStateType) => state.customizableCounter)*/
+
+    const startCount = useSelector((state: AppStateType) => state.customizableCounter.startCount)
+    const maxCount = useSelector((state: AppStateType) => state.customizableCounter.maxCount)
+    let buttonSetDisable = useSelector((state: AppStateType) => state.customizableCounter.buttonSetDisable)
 
     const dispatch = useDispatch()
 
