@@ -3,24 +3,31 @@ import s from '../../App.module.css';
 import bs from '../../App.module.css'
 import SuperNumberInput from "../SuperNumberInput";
 import SuperButton from "../SuperButton";
-import {useDispatch, useSelector} from "react-redux";
-import {AppStateType} from "../../Redux/store";
+import {useDispatch} from "react-redux";
 import {
-    buttonSetAC, changeContentMessageAC,
-    maxCountChangerAC,  startCountChangerAC, getSettingValuesTC,setSettingValuesTC
+    changeContentMessageAC,
+     getSettingValuesTC,setSettingValuesTC
 } from "../../Redux/Customizable-Counter-reducer/customizable-counter-reducer";
 
-const CounterSettings: React.FC = React.memo(() => {
+type CounterSettingsPropsType = {
+    startCount: number
+    maxCount: number
+    buttonSetDisable: boolean
+    buttonSetHandler: () => void
+    changeMaxCountHandler: (maxCountValue: number) => void
+    changeStartCountHandler: (startCountValue: number) => void
+}
+
+const CounterSettings: React.FC<CounterSettingsPropsType> = React.memo((props) => {
     console.log('Counter Settings')
-    /*let {
+    const {
         startCount,
         maxCount,
         buttonSetDisable,
-    } = useSelector((state: AppStateType) => state.customizableCounter)*/
-
-    const startCount = useSelector((state: AppStateType) => state.customizableCounter.startCount)
-    const maxCount = useSelector((state: AppStateType) => state.customizableCounter.maxCount)
-    let buttonSetDisable = useSelector((state: AppStateType) => state.customizableCounter.buttonSetDisable)
+        buttonSetHandler,
+        changeMaxCountHandler,
+        changeStartCountHandler
+    } = props
 
     const dispatch = useDispatch()
 
@@ -34,11 +41,11 @@ const CounterSettings: React.FC = React.memo(() => {
         if (e.currentTarget.dataset.count) {
             let trigger: string = e.currentTarget.dataset.count
             if (trigger === "max") {
-                dispatch(maxCountChangerAC(value))
+                changeMaxCountHandler(value)
                 dispatch(changeContentMessageAC())
             }
             if (trigger === "start") {
-                dispatch(startCountChangerAC(value))
+                changeStartCountHandler(value)
                 dispatch(changeContentMessageAC())
             }
         }
@@ -46,14 +53,9 @@ const CounterSettings: React.FC = React.memo(() => {
 
     // Callback for "set" button onClick
     const buttonOnClick = useCallback(() => {
-        dispatch(buttonSetAC())
+        buttonSetHandler()
         dispatch(setSettingValuesTC())
     }, [maxCount, startCount])
-
-    // Disable for "set" button
-    if (maxCount < 0 || startCount < 0 || maxCount < startCount) {
-        buttonSetDisable = true
-    }
 
     return (
         <div className={ s.wrapper }>

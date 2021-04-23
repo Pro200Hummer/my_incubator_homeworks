@@ -1,42 +1,39 @@
 import React, {MouseEvent, useCallback} from 'react';
 import s from '../../App.module.css';
 import SuperButton from "../SuperButton";
-import {useDispatch, useSelector} from "react-redux";
-import {AppStateType} from "../../Redux/store";
-import {
-    incrementCountAC, resetCounterAC
-} from "../../Redux/Customizable-Counter-reducer/customizable-counter-reducer";
 
-const Counter: React.FC = React.memo(() => {
+type CounterPropsType = {
+    content: string | number
+    buttonIncDisable: boolean
+    buttonResetDisable: boolean
+    finalContentStyles: string
+    buttonIncHandler: () => void
+    buttonResetHandler: () => void
+}
+
+const Counter: React.FC<CounterPropsType> = React.memo((props) => {
     console.log('Counter')
-    let {
+    const {
         content,
-        maxCount,
-        startCount,
         buttonIncDisable,
         buttonResetDisable,
-    } = useSelector((state: AppStateType) => state.customizableCounter)
-
-    const dispatch = useDispatch()
+        finalContentStyles,
+        buttonIncHandler,
+        buttonResetHandler
+    } = props
 
     // События кликов инкремента и сброса счётчика
     const buttonOnClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
         if (e.currentTarget.dataset.button) {
             let trigger: string = e.currentTarget.dataset.button
             if (trigger === "inc") {
-                dispatch(incrementCountAC())
+                buttonIncHandler()
             }
             if (trigger === "res") {
-                dispatch(resetCounterAC())
+                buttonResetHandler()
             }
         }
     }, [content])
-
-    // Стилизация отображаемой области счётчика
-     let finalContentStyles = maxCount < 0 || startCount < 0 || content === maxCount || maxCount < startCount ?
-         `${ s.red } ${ s.counter }` :
-         `${ s.normal } ${ s.counter }`
-
 
     return (
         <div>
